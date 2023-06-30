@@ -1,6 +1,7 @@
 package com.example.todomanager.entity;
 
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
@@ -10,5 +11,5 @@ public class Todo {
     private String username;
     private String description;
     private String targetDate;
-    private boolean isDone;
+    private boolean done;
 }

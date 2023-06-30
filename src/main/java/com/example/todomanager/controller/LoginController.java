@@ -21,6 +21,7 @@ public class LoginController {
     @PostMapping("/login")
     public String login(@RequestParam String username, @RequestParam String password, ModelMap model) {
         if(this.service.validateUser(username, password)) {
+            model.put("username", username);
             return "main";
         }
         else {
