@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class TodoController {
@@ -39,5 +40,11 @@ public class TodoController {
             service.addTodo((String)model.get("username"), todo.getDescription());
             return "redirect:/todo-list";
         }
+    }
+
+    @GetMapping("/delete-todo")
+    public String deleteTodo(@RequestParam int id) {
+        service.deleteTodoById(id);
+        return "redirect:/todo-list";
     }
 }
