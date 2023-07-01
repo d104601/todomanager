@@ -1,8 +1,11 @@
 package com.example.todomanager.controller;
 
+import com.example.todomanager.entity.Todo;
 import com.example.todomanager.service.TodoService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -21,13 +24,20 @@ public class TodoController {
     }
 
     @GetMapping("/add-todo")
-    public String addTodoPage() {
+    public String addTodoPage(ModelMap model) {
+        Todo todo = new Todo(0, (String)model.get("username"), "", "", false);
+        model.put("todo", todo);
         return "add-todo";
     }
 
     @PostMapping("/add-todo")
-    public String addTodo() {
-        service.addTodo();
-        return "redirect:/todo-list";
+    public String addTodo(ModelMap model, @Valid Todo todo, BindingResult result) {
+        if(result.hasErrors()) {
+            return "add-todo";
+        }
+        else {
+            service.addTodo((String)model.get("username"), todo.getDescription());
+            return "redirect:/todo-list";
+        }
     }
 }
