@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+
 @Controller
 public class TodoController {
     private TodoService service;
@@ -26,7 +28,7 @@ public class TodoController {
 
     @GetMapping("/add-todo")
     public String addTodoPage(ModelMap model) {
-        Todo todo = new Todo(0, (String)model.get("username"), "", "", false);
+        Todo todo = new Todo(0, (String)model.get("username"), "", LocalDate.now(), false);
         model.put("todo", todo);
         return "add-todo";
     }
@@ -37,7 +39,7 @@ public class TodoController {
             return "add-todo";
         }
         else {
-            service.addTodo((String)model.get("username"), todo.getDescription());
+            service.addTodo((String)model.get("username"), todo);
             return "redirect:/todo-list";
         }
     }
@@ -46,5 +48,24 @@ public class TodoController {
     public String deleteTodo(@RequestParam int id) {
         service.deleteTodoById(id);
         return "redirect:/todo-list";
+    }
+
+    @GetMapping("/update-todo")
+    public String updateTodoPage(@RequestParam int id, ModelMap model) {
+        Todo todo = service.findById(id);
+        model.put("todo", todo);
+        return "update-todo";
+    }
+
+    @PostMapping("/update-todo")
+    public String updateTodoById(ModelMap model, @Valid Todo todo, BindingResult result) {
+        if(result.hasErrors()) {
+            return "update-todo";
+        }
+        else {
+            todo.setUsername((String)model.get("username"));
+            service.updateTodo(todo);
+            return "redirect:/todo-list";
+        }
     }
 }
