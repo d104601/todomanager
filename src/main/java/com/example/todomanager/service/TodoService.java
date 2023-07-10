@@ -1,49 +1,40 @@
 package com.example.todomanager.service;
 
 import com.example.todomanager.entity.Todo;
+import com.example.todomanager.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TodoService {
-    private static List<Todo> todos = new ArrayList<>();
+    private TodoRepository repository;
 
-    private static int todoCount = 0;
-
-    static {
-        todos.add(new Todo(todoCount++, "admin", "Learn Spring MVC", LocalDate.now(), false));
-        todos.add(new Todo(todoCount++, "admin", "Learn Struts", LocalDate.now(), false));
-        todos.add(new Todo(todoCount++, "admin", "Learn Hibernate", LocalDate.now(), false));
+    public TodoService(TodoRepository repository) {
+        this.repository = repository;
     }
 
     public List<Todo> findByUsername(String username) {
-        return todos;
+        // stream api to filter todos by username
+        return repository.findByUsername(username);
     }
 
     public void addTodo(String username, Todo todo) {
-        todo.setId(todoCount++);
         todo.setUsername(username);
-        todos.add(todo);
+        repository.save(todo);
     }
 
     public Todo findById(int id) {
-        for(Todo todo : todos) {
-            if(todo.getId() == id) {
-                return todo;
-            }
-        }
-        return null;
+        Optional<Todo> todo = repository.findById(id);
+        return todo.isPresent() ? todo.get() : null;
     }
 
     public void deleteTodoById(int id) {
-        todos.removeIf(todo -> todo.getId() == id);
+        repository.deleteById(id);
     }
 
     public void updateTodo(Todo todo) {
-        todos.removeIf(t -> t.getId() == todo.getId());
-        todos.add(todo);
+        repository.save(todo);
     }
 }

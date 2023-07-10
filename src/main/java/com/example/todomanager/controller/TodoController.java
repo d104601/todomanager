@@ -1,28 +1,29 @@
 package com.example.todomanager.controller;
 
 import com.example.todomanager.entity.Todo;
+import com.example.todomanager.repository.TodoRepository;
 import com.example.todomanager.service.TodoService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
 @Controller
+@SessionAttributes("username")
 public class TodoController {
     private TodoService service;
 
-    public TodoController(TodoService service) {
+    public TodoController(TodoService service, TodoRepository repository) {
         this.service = service;
     }
 
     @GetMapping("/todo-list")
     public String getAllTodos(ModelMap model) {
-        model.put("todos", this.service.findByUsername("admin"));
+        String username = (String)model.get("username");
+        model.put("todos", this.service.findByUsername(username));
         return "todo-list";
     }
 

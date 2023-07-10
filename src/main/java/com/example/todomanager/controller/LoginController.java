@@ -1,32 +1,22 @@
 package com.example.todomanager.controller;
 
-import com.example.todomanager.service.LoginService;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@SessionAttributes("username")
 public class LoginController {
-    private LoginService service;
-
-    public LoginController(LoginService service) {
-        this.service = service;
+    @GetMapping("/")
+    public String getPage(ModelMap model) {
+        model.put("username", getLoggedInUsername());
+        return "main";
     }
 
-    @GetMapping("/login")
-    public String getPage() {
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, ModelMap model) {
-        if(this.service.validateUser(username, password)) {
-            model.put("username", username);
-            return "main";
-        }
-        else {
-            model.put("errorMessage", "Invalid Credentials");
-            return "login";
-        }
+    private String getLoggedInUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName();
     }
 }

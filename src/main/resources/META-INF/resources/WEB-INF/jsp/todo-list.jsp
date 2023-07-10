@@ -1,11 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
-    <head>
-        <link href="webjars/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-        <title>Todos</title>
-    </head>
+    <%@ include file="common/head.jspf" %>
     <body>
+        <header>
+            <%@include file="common/navbar.jspf" %>
+        </header>
         <main class="container">
             <h1>Your todos</h1>
             <table class="table">
@@ -32,7 +32,6 @@
         </main>
 
 
-        <script src="webjars/bootstrap/5.1.3/js/bootstrap.min.js"></script>
-        <script src="webjars/jquery/3.6.0/jquery.min.js"></script>
+        <%@include file="common/scripts.jspf" %>
     </body>
 </html>
